@@ -35,7 +35,7 @@ func main() {
 	}
 	defer session.Close()
 
-	log.Println("Bot is running...")
+	log.Println("Bot is running with name:", session.State.User.Username)
 
 	// register commands
 	if err := config.DeployCommands(session, registry); err != nil {

@@ -38,3 +38,6 @@ vendor/
 # Application specific
 /bot
 /cmd/bot/bot
+
+# tmp files for air
+tmp/
