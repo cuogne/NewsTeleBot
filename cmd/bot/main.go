@@ -7,6 +7,7 @@ import (
 	"syscall"
 
 	"fit-news-discord-bot/internal/config"
+	"fit-news-discord-bot/internal/supabase"
 )
 
 func main() {
@@ -36,6 +37,13 @@ func main() {
 	defer session.Close()
 
 	log.Println("Bot is running with name:", session.State.User.Username)
+
+	// connect to Supabase
+	if err := supabase.ConnectSupabase(); err != nil {
+		log.Fatalf("Error connecting to Supabase: %v", err)
+	}
+
+	log.Println("Connected to Supabase successfully.")
 
 	// register commands
 	if err := config.DeployCommands(session, registry); err != nil {
