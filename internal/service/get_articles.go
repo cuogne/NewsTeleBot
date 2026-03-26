@@ -17,14 +17,26 @@ func GetArticles() ([]model.News, error) {
 
 	var wg sync.WaitGroup
 	ch := make(chan model.ListNews, len(config.Feeds))
+	sem := make(chan struct{}, 10) // max concurrency 10
 
 	for _, fd := range config.Feeds {
 		wg.Add(1)
-		go crawler.Crawl(fd, &wg, ch)
+
+		go func(feed config.Resource) {
+			defer wg.Done()
+
+			// use semaphore
+			sem <- struct{}{}
+			defer func() { <-sem }()
+
+			crawler.Crawl(feed, ch)
+		}(fd)
 	}
 
-	wg.Wait()
-	close(ch)
+	go func() {
+		wg.Wait()
+		close(ch)
+	}()
 
 	var articles []model.News
 
