@@ -7,8 +7,8 @@ import (
 	"github.com/gocolly/colly"
 )
 
-func CrawlHTMLNews(link, category string) ([]model.Article, error) {
-	var articles []model.Article
+func CrawlHTMLNews(link, category string) ([]model.News, error) {
+	var news []model.News
 	var crawlError error
 
 	c := colly.NewCollector(
@@ -21,10 +21,11 @@ func CrawlHTMLNews(link, category string) ([]model.Article, error) {
 			url := e.Attr("href")
 
 			if title != "" && url != "" {
-				articles = append(articles, model.Article{
+				news = append(news, model.News{
 					Category: category,
 					Title:    title,
 					URL:      url,
+					Format:   "html",
 				})
 			}
 		},
@@ -45,16 +46,16 @@ func CrawlHTMLNews(link, category string) ([]model.Article, error) {
 		return nil, crawlError
 	}
 
-	if len(articles) == 0 {
+	if len(news) == 0 {
 		return nil, fmt.Errorf("no news element found for %s", category)
 	}
 
-	sizeNews := min(len(articles), 10)
-	articles = articles[:sizeNews]
+	sizeNews := min(len(news), 10)
+	news = news[:sizeNews]
 
-	// for i, j := 0, len(articles)-1; i < j; i, j = i+1, j-1 {
-	// 	articles[i], articles[j] = articles[j], articles[i]
+	// for i, j := 0, len(news)-1; i < j; i, j = i+1, j-1 {
+	// 	news[i], news[j] = news[j], news[i]
 	// }
 
-	return articles, nil
+	return news, nil
 }

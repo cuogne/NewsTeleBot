@@ -9,7 +9,7 @@ import (
 	"github.com/mmcdole/gofeed"
 )
 
-func CrawlRSSNews(link, category string) ([]model.Article, error) {
+func CrawlRSSNews(link, category string) ([]model.News, error) {
 	parser := gofeed.NewParser()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
@@ -21,24 +21,25 @@ func CrawlRSSNews(link, category string) ([]model.Article, error) {
 		return nil, err
 	}
 
-	var articles []model.Article
+	var news []model.News
 
 	for _, item := range feed.Items {
 		if item.Title != "" && item.Link != "" {
-			articles = append(articles, model.Article{
+			news = append(news, model.News{
 				Category: category,
 				Title:    item.Title,
 				URL:      item.Link,
+				Format:   "rss",
 			})
 		}
 	}
 
-	if len(articles) == 0 {
+	if len(news) == 0 {
 		return nil, fmt.Errorf("no news element found for %s", category)
 	}
 
-	sizeNews := min(len(articles), 10)
-	articles = articles[:sizeNews]
+	sizeNews := min(len(news), 10)
+	news = news[:sizeNews]
 
-	return articles, nil
+	return news, nil
 }
