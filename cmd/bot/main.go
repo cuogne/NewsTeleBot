@@ -21,6 +21,11 @@ func main() {
 		log.Fatal("Vui lòng thiết lập TELEGRAM_BOT_TOKEN trong file .env")
 	}
 
+	config.ConnectPostgreSQL()
+	defer config.CloseDB()
+
+	dbPool := config.GetPool()
+
 	pref := tele.Settings{
 		Token:  token,
 		Poller: &tele.LongPoller{Timeout: 10 * time.Second},
@@ -32,10 +37,7 @@ func main() {
 		return
 	}
 
-	b.Handle("/start", func(c tele.Context) error {
-		log.Println("Nhận lệnh /start")
-		return c.Send("Kết nối bot thành công!")
-	})
+	config.SetupBot(b, dbPool)
 
 	log.Println("Bot đang chạy...")
 	b.Start()
