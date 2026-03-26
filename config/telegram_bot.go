@@ -29,4 +29,5 @@ func SetupBot(b *tele.Bot, dbPool *pgxpool.Pool) {
 	// register command handlers
 	b.Handle("/start", command.Start)
 	b.Handle("/subscribe", command.Subscribe(dbPool))
+	b.Handle("/unsubscribe", command.Unsubscribe(dbPool))
 }
