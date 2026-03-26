@@ -1,4 +1,4 @@
-package constants
+package config
 
 type Resource struct {
 	URL      string

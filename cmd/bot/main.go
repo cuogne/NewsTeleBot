@@ -2,58 +2,41 @@ package main
 
 import (
 	"log"
-	"os"
-	"os/signal"
-	"syscall"
+	"time"
 
-	"fit-news-discord-bot/internal/config"
-	"fit-news-discord-bot/internal/supabase"
+	"hcmus-news-tele-bot/config"
+
+	"github.com/joho/godotenv"
+	tele "gopkg.in/telebot.v4"
 )
 
 func main() {
-	// load config discord
-	discordCfg, err := config.LoadDiscordConfig()
+	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error loading discord config: %v", err)
+		log.Fatal("Error loading .env file")
 	}
 
-	// initiate Discord session
-	session, err := discordCfg.Connect()
+	token := config.LoadTelegramBotToken()
+	if token == "" {
+		log.Fatal("Vui lòng thiết lập TELEGRAM_BOT_TOKEN trong file .env")
+	}
+
+	pref := tele.Settings{
+		Token:  token,
+		Poller: &tele.LongPoller{Timeout: 10 * time.Second},
+	}
+
+	b, err := tele.NewBot(pref)
 	if err != nil {
-		log.Fatalf("Error connecting to Discord: %v", err)
+		log.Fatal("Lỗi khởi tạo bot: ", err)
+		return
 	}
 
-	// setup bot commands
-	registry := config.NewRegistry()
-	config.SetupCommands(registry)
+	b.Handle("/start", func(c tele.Context) error {
+		log.Println("Nhận lệnh /start")
+		return c.Send("Kết nối bot thành công!")
+	})
 
-	// add interaction handler
-	session.AddHandler(registry.HandleInteraction)
-
-	// start the bot
-	if err := session.Open(); err != nil {
-		log.Fatalf("Error opening connection: %v", err)
-	}
-	defer session.Close()
-
-	log.Println("Bot is running with name:", session.State.User.Username)
-
-	// connect to Supabase
-	if err := supabase.ConnectSupabase(); err != nil {
-		log.Fatalf("Error connecting to Supabase: %v", err)
-	}
-
-	log.Println("Connected to Supabase successfully.")
-
-	// register commands
-	if err := config.DeployCommands(session, registry); err != nil {
-		log.Fatalf("Cannot register commands: %v", err)
-	}
-
-	// 7. Wait for Interrupt Signal
-	sc := make(chan os.Signal, 1)
-	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
-	<-sc
-
-	log.Println("Shutting down...")
+	log.Println("Bot đang chạy...")
+	b.Start()
 }
