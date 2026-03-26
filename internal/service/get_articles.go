@@ -4,6 +4,7 @@ import (
 	"hcmus-news-tele-bot/config"
 	"hcmus-news-tele-bot/internal/crawler"
 	"hcmus-news-tele-bot/internal/model"
+	"log"
 	"sync"
 )
 
@@ -29,7 +30,8 @@ func GetArticles() ([]model.News, error) {
 
 	for listNews := range ch {
 		if listNews.Err != nil {
-			return nil, listNews.Err
+			log.Fatal(listNews.Err)
+			continue // skip error feed
 		}
 		articles = append(articles, listNews.News...)
 	}

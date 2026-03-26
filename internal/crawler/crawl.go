@@ -1,6 +1,7 @@
 package crawler
 
 import (
+	"fmt"
 	"hcmus-news-tele-bot/config"
 	"hcmus-news-tele-bot/internal/model"
 	"strings"
@@ -28,5 +29,12 @@ func Crawl(feed config.Resource, wg *sync.WaitGroup, ch chan<- model.ListNews) {
 			Category: feed.Category,
 			Err:      err,
 		}
+	default:
+		ch <- model.ListNews{
+			News:     nil,
+			Category: "",
+			Err:      fmt.Errorf("unsupported format: %s", feed.Format),
+		}
 	}
+
 }
