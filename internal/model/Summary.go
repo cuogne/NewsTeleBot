@@ -2,12 +2,12 @@ package model
 
 type (
 	SummaryJob struct {
-		Article  News
+		Article  Article
 		Category string
 	}
 
 	SummaryResult struct {
-		Article         News
+		Article         Article
 		Category        string
 		Summary         string
 		PromptToken     int

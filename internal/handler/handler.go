@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"hcmus-news-tele-bot/internal/model"
@@ -21,7 +20,7 @@ func StartCronJob(b *tele.Bot, dbPool *pgxpool.Pool) {
 		runCronCycle(b, dbPool)
 	})
 	if err != nil {
-		log.Fatalf("Lỗi thiết lập cron job: %v", err)
+		log.Fatalf("Error starting cron job: %v", err)
 	}
 
 	log.Println("cron job is working")
@@ -32,18 +31,18 @@ func runCronCycle(b *tele.Bot, dbPool *pgxpool.Pool) {
 	// crawl all news
 	articles, err := service.GetArticles()
 	if err != nil {
-		log.Printf("Lỗi crawl cron: %v\n", err)
+		log.Printf("Error crawling cron: %v\n", err)
 		return
 	}
 
 	// filter new articles
 	newArticles := service.FilterNewArticles(dbPool, articles)
 	if len(newArticles) == 0 {
-		log.Println("Không có bài viết mới.")
+		log.Println("No new articles.")
 		return
 	}
 
-	fmt.Println(newArticles)
+	log.Printf("Found %d new articles.\n", len(newArticles))
 
 	jobs := make(chan model.SummaryJob, len(newArticles))
 	results := make(chan model.SummaryResult, len(newArticles))

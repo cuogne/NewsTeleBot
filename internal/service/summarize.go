@@ -34,6 +34,7 @@ func SummarizeContentWithGemini(content string, link string) (model.SummaryResul
 		- Phải đi qua đủ hết nội dung của trang web, tóm tắt lại đầy đủ -> người dùng chưa cần ấn vào link vẫn có thể nắm được sơ qua nội dung chính của bài viết.
 		- Chọn những dòng quan trọng/hấp dẫn để tóm tắt -> người dùng hứng thú -> vào link đọc tiếp.
 		- Không cần chào hỏi, vô thẳng nội dung chính, không cần nói thêm gì khác.
+		- Nếu tóm tắt xong, nội dung có câu: Trang web này sử dụng cookie, thì không ghi đoạn này, nếu không đủ nội dung thì để rỗng.
 		- Ở cuối tóm tắt, xuống dòng 1 cái, ghi câu: Chi tiết xem tại: %s.
 		Nội dung bài viết như sau: %s`, link, content)
 

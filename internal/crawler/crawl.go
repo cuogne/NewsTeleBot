@@ -8,27 +8,27 @@ import (
 )
 
 // https://dev.to/jones_charles_ad50858dbc0/building-a-high-concurrency-web-crawler-in-go-a-practical-guide-i3a
-func Crawl(feed config.Resource, ch chan<- model.ListNews) {
+func Crawl(feed config.Resource, ch chan<- model.ListArticles) {
 	switch strings.ToLower(feed.Format) {
 	case "rss":
-		listNews, err := CrawlRSSNews(feed.URL, feed.Category)
+		listArticles, err := CrawlRSSArticles(feed.URL, feed.Category)
 
-		ch <- model.ListNews{
-			News:     listNews,
+		ch <- model.ListArticles{
+			Articles: listArticles,
 			Category: feed.Category,
 			Err:      err,
 		}
 	case "html":
-		listNews, err := CrawlHTMLNews(feed.URL, feed.Category)
+		listArticles, err := CrawlHTMLArticles(feed.URL, feed.Category)
 
-		ch <- model.ListNews{
-			News:     listNews,
+		ch <- model.ListArticles{
+			Articles: listArticles,
 			Category: feed.Category,
 			Err:      err,
 		}
 	default:
-		ch <- model.ListNews{
-			News:     nil,
+		ch <- model.ListArticles{
+			Articles: nil,
 			Category: "",
 			Err:      fmt.Errorf("unsupported format: %s", feed.Format),
 		}

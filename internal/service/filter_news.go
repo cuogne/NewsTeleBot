@@ -11,18 +11,18 @@ import (
 
 func FilterNewArticles(
 	dbPool *pgxpool.Pool,
-	articles []model.News,
+	articles []model.Article,
 ) []model.SummaryJob {
-	categories := []string{"fithcmus", "lichthi", "thongbao", "hcmus"}
+	categories := []string{"fithcmus", "lichthi", "thongbao", "hcmus"} // luoi qa nen set cung data
 	existUrls := make(map[string]bool)
 
 	for _, category := range categories {
-		dataNews, err := repository.GetNews(dbPool, context.Background(), category)
+		dataArticles, err := repository.GetArticle(dbPool, context.Background(), category)
 		if err != nil {
 			log.Printf("Error in db %s: %v\n", category, err)
 			continue
 		}
-		for _, dn := range dataNews {
+		for _, dn := range dataArticles {
 			existUrls[dn.URL] = true
 		}
 	}

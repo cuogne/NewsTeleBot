@@ -8,7 +8,7 @@ import (
 	"sync"
 )
 
-func GetArticles() ([]model.News, error) {
+func GetArticles() ([]model.Article, error) {
 	// urls := make([]string, len(config.Feeds))
 
 	// for i, fd := range config.Feeds {
@@ -16,7 +16,7 @@ func GetArticles() ([]model.News, error) {
 	// }
 
 	var wg sync.WaitGroup
-	ch := make(chan model.ListNews, len(config.Feeds))
+	ch := make(chan model.ListArticles, len(config.Feeds))
 	sem := make(chan struct{}, 10) // max concurrency 10
 
 	for _, fd := range config.Feeds {
@@ -38,17 +38,17 @@ func GetArticles() ([]model.News, error) {
 		close(ch)
 	}()
 
-	var articles []model.News
+	var articles []model.Article
 
-	for listNews := range ch {
-		if listNews.Err != nil {
-			log.Fatal(listNews.Err)
+	for listArticles := range ch {
+		if listArticles.Err != nil {
+			log.Fatal(listArticles.Err)
 			continue // skip error feed
 		}
-		for i := range listNews.News {
-			listNews.News[i].Category = listNews.Category
+		for i := range listArticles.Articles {
+			listArticles.Articles[i].Category = listArticles.Category
 		}
-		articles = append(articles, listNews.News...)
+		articles = append(articles, listArticles.Articles...)
 	}
 
 	return articles, nil

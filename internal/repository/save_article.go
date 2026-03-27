@@ -9,7 +9,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func SaveNews(
+func SaveArticle(
 	db *pgxpool.Pool,
 	ctx context.Context,
 	res model.SummaryResult,
@@ -50,7 +50,7 @@ func SaveNews(
 	)
 
 	if err != nil {
-		return fmt.Errorf("failed to insert news to %s: %w", table, err)
+		return fmt.Errorf("failed to insert article to %s: %w", table, err)
 	}
 
 	pruneQuery := fmt.Sprintf(`
@@ -64,7 +64,7 @@ func SaveNews(
 
 	_, err = tx.Exec(ctx, pruneQuery)
 	if err != nil {
-		return fmt.Errorf("failed to prune old news in %s: %w", table, err)
+		return fmt.Errorf("failed to prune old articles in %s: %w", table, err)
 	}
 
 	if err := tx.Commit(ctx); err != nil {

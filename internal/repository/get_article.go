@@ -8,11 +8,11 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func GetNews(
+func GetArticle(
 	db *pgxpool.Pool,
 	ctx context.Context,
 	category string,
-) ([]model.News, error) {
+) ([]model.Article, error) {
 	var query string
 	switch category {
 	case "fithcmus":
@@ -33,18 +33,18 @@ func GetNews(
 	}
 	defer rows.Close()
 
-	var newsList []model.News
+	var articlesList []model.Article
 	for rows.Next() {
-		var n model.News
+		var n model.Article
 		if err := rows.Scan(&n.Title, &n.URL); err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
-		newsList = append(newsList, n)
+		articlesList = append(articlesList, n)
 	}
 
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("row iteration error: %w", err)
 	}
 
-	return newsList, nil
+	return articlesList, nil
 }

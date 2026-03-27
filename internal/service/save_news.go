@@ -15,7 +15,7 @@ func SaveToDB(dbPool *pgxpool.Pool, res model.SummaryResult) {
 	}
 
 	// save to db
-	err := repository.SaveNews(
+	err := repository.SaveArticle(
 		dbPool,
 		context.Background(),
 		res,

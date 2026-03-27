@@ -1,15 +1,15 @@
 package model
 
 type (
-	News struct {
+	Article struct {
 		Title    string `json:"title"`
 		URL      string `json:"url"`
 		Category string `json:"category"`
 		Format   string `json:"format"`
 	}
 
-	ListNews struct {
-		News     []News
+	ListArticles struct {
+		Articles []Article
 		Category string
 		Err      error
 	}
