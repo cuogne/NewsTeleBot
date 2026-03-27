@@ -15,7 +15,9 @@ import (
 
 func StartCronJob(b *tele.Bot, dbPool *pgxpool.Pool) {
 	c := cron.New()
-	_, err := c.AddFunc("@every 30s", func() {
+	time := "@every 10m" // every 10 minutes
+
+	_, err := c.AddFunc(time, func() {
 		log.Println("starting cron cycle...")
 		runCronCycle(b, dbPool)
 	})
