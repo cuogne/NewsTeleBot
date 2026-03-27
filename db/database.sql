@@ -1,25 +1,33 @@
 create table fitnews (
   url text primary key,
   title text not null,
-  send_at timestamp
+  send_at timestamp,
+  prompt_token int,
+  completion_token int
 )
 
 create table hcmus (
   url text primary key,
   title text not null,
-  send_at timestamp
+  send_at timestamp,
+  prompt_token int,
+  completion_token int
 )
 
 create table lichthi (
   url text primary key,
   title text not null,
-  send_at timestamp
+  send_at timestamp,
+  prompt_token int,
+  completion_token int
 )
 
 create table thongbaopkt (
   url text primary key,
   title text not null,
-  send_at timestamp
+  send_at timestamp,
+  prompt_token int,
+  completion_token int
 )
 
 create table users (

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"hcmus-news-tele-bot/config"
+	"hcmus-news-tele-bot/internal/handler"
 
 	"github.com/joho/godotenv"
 	tele "gopkg.in/telebot.v4"
@@ -38,6 +39,7 @@ func main() {
 	}
 
 	config.SetupBot(b, dbPool)
+	handler.StartCronJob(b, dbPool)
 
 	log.Println("Bot đang chạy...")
 	b.Start()

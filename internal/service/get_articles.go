@@ -45,6 +45,9 @@ func GetArticles() ([]model.News, error) {
 			log.Fatal(listNews.Err)
 			continue // skip error feed
 		}
+		for i := range listNews.News {
+			listNews.News[i].Category = listNews.Category
+		}
 		articles = append(articles, listNews.News...)
 	}
 
