@@ -1,0 +1,24 @@
+.git
+.gitignore
+.vscode
+.idea
+
+# Environment files
+.env
+.env.local
+
+# Build artifacts
+bin/
+tmp/
+dist/
+*.log
+
+# Tests and local docs (not needed at runtime build)
+test/
+Flow.md
+README.md
+
+# OS/editor files
+.DS_Store
+*.swp
+*.swo
