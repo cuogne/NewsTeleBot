@@ -15,7 +15,7 @@ import (
 
 func StartCronJob(b *tele.Bot, dbPool *pgxpool.Pool) {
 	c := cron.New()
-	time := "@every 5m" // every 5 minutes
+	time := "@every 10m" // every 10 minutes
 
 	_, err := c.AddFunc(time, func() {
 		runCronCycle(b, dbPool)
@@ -24,7 +24,7 @@ func StartCronJob(b *tele.Bot, dbPool *pgxpool.Pool) {
 		log.Fatalf("Error starting cron job: %v", err)
 	}
 
-	log.Println("cron job is working, 5 minutes per cycle")
+	log.Println("cron job is working, 10 minutes per cycle")
 	c.Start()
 }
 
