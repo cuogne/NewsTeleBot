@@ -15,17 +15,16 @@ import (
 
 func StartCronJob(b *tele.Bot, dbPool *pgxpool.Pool) {
 	c := cron.New()
-	time := "@every 10m" // every 10 minutes
+	time := "@every 5m" // every 5 minutes
 
 	_, err := c.AddFunc(time, func() {
-		log.Println("starting cron cycle...")
 		runCronCycle(b, dbPool)
 	})
 	if err != nil {
 		log.Fatalf("Error starting cron job: %v", err)
 	}
 
-	log.Println("cron job is working")
+	log.Println("cron job is working, 5 minutes per cycle")
 	c.Start()
 }
 
@@ -40,11 +39,8 @@ func runCronCycle(b *tele.Bot, dbPool *pgxpool.Pool) {
 	// filter new articles
 	newArticles := service.FilterNewArticles(dbPool, articles)
 	if len(newArticles) == 0 {
-		log.Println("No new articles.")
 		return
 	}
-
-	log.Printf("Found %d new articles.\n", len(newArticles))
 
 	jobs := make(chan model.SummaryJob, len(newArticles))
 	results := make(chan model.SummaryResult, len(newArticles))

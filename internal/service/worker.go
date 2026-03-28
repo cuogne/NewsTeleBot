@@ -8,11 +8,15 @@ import (
 func Worker(id int, jobs <-chan model.SummaryJob, results chan<- model.SummaryResult) {
 	for job := range jobs {
 		category := strings.ToLower(job.Category)
+
+		// for "lichthi" and "thongbao", do not summarize (it's so short)
 		if category == "lichthi" || category == "thongbao" {
 			results <- model.SummaryResult{
-				Article:  job.Article,
-				Category: job.Category,
-				Summary:  job.Article.URL,
+				Article:         job.Article,
+				Category:        job.Category,
+				Summary:         job.Article.URL,
+				PromptToken:     0,
+				CompletionToken: 0,
 			}
 			continue
 		}
@@ -20,9 +24,11 @@ func Worker(id int, jobs <-chan model.SummaryJob, results chan<- model.SummaryRe
 		content, err := GetContentFromURL(job.Article.URL)
 		if err != nil {
 			results <- model.SummaryResult{
-				Article:  job.Article,
-				Category: job.Category,
-				Summary:  "",
+				Article:         job.Article,
+				Category:        job.Category,
+				Summary:         "",
+				PromptToken:     0,
+				CompletionToken: 0,
 			}
 			continue
 		}
@@ -30,9 +36,11 @@ func Worker(id int, jobs <-chan model.SummaryJob, results chan<- model.SummaryRe
 		summary, err := SummarizeContentWithGemini(content, job.Article.URL)
 		if err != nil {
 			results <- model.SummaryResult{
-				Article:  job.Article,
-				Category: job.Category,
-				Summary:  "",
+				Article:         job.Article,
+				Category:        job.Category,
+				Summary:         "",
+				PromptToken:     0,
+				CompletionToken: 0,
 			}
 			continue
 		}

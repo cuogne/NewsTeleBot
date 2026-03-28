@@ -42,7 +42,7 @@ func GetArticles() ([]model.Article, error) {
 
 	for listArticles := range ch {
 		if listArticles.Err != nil {
-			log.Fatal(listArticles.Err)
+			log.Printf("err: %v", listArticles.Err)
 			continue // skip error feed
 		}
 		for i := range listArticles.Articles {

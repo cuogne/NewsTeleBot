@@ -8,7 +8,7 @@ import (
 func Start() tele.HandlerFunc {
 	return func(c tele.Context) error {
 		msg := "Xin chào " + c.Sender().FirstName + "!\n"
-		msg += "Bot này sẽ giúp bạn cập nhật thông tin từ các trang web của trường Đại học Khoa học Tự nhiên.\n"
+		msg += "Bot này sẽ giúp bạn cập nhật thông tin từ các trang web của HCMUS.\n\n"
 		msg += "Các lệnh:\n"
 		msg += "/start - Bắt đầu\n"
 		msg += "/help - Hỗ trợ bạn cấu hình\n"
