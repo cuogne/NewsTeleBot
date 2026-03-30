@@ -19,7 +19,7 @@ func SendTele(b *tele.Bot, users []string, res model.SummaryResult) {
 	summary := strings.TrimSpace(res.Summary)
 	link := res.Article.URL
 
-	msg := fmt.Sprintf("📰 [TIN MỚI]: <b>%s</b>\n\n%s\nChi tiết xem tại: %s", title, summary, link)
+	msg := fmt.Sprintf("📰 <b>[TIN MỚI]: %s</b>\n\n%s\n\nChi tiết xem tại: %s", title, summary, link)
 	for _, uID := range users {
 		chatID, err := strconv.ParseInt(uID, 10, 64)
 		if err != nil {
