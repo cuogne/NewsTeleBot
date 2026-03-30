@@ -33,7 +33,7 @@ func Worker(id int, jobs <-chan model.SummaryJob, results chan<- model.SummaryRe
 			continue
 		}
 
-		summary, err := SummarizeContentWithGemini(content, job.Article.URL)
+		summary, err := SummarizeContentWithGemini(content)
 		if err != nil {
 			results <- model.SummaryResult{
 				Article:         job.Article,

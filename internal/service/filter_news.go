@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"hcmus-news-tele-bot/config"
 	"hcmus-news-tele-bot/internal/model"
 	"hcmus-news-tele-bot/internal/repository"
 	"log"
@@ -13,7 +14,12 @@ func FilterNewArticles(
 	dbPool *pgxpool.Pool,
 	articles []model.Article,
 ) []model.SummaryJob {
-	categories := []string{"fithcmus", "lichthi", "thongbao", "hcmus"} // luoi qa nen set cung data
+	// categories := []string{"fithcmus", "lichthi", "thongbao", "hcmus"} // luoi qa nen set cung data
+	categories := make([]string, len(config.Feeds))
+	for i, feed := range config.Feeds {
+		categories[i] = feed.Category
+	}
+
 	existUrls := make(map[string]bool)
 
 	for _, category := range categories {

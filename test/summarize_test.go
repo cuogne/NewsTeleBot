@@ -19,7 +19,7 @@ func TestSummarizeWithGemini(t *testing.T) {
 		t.Fatalf("Failed to get content: %v", err)
 	}
 
-	data, err := service.SummarizeContentWithGemini(content, link)
+	data, err := service.SummarizeContentWithGemini(content)
 	if err != nil {
 		t.Fatalf("Failed to summarize content: %v", err)
 	}

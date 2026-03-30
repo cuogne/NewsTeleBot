@@ -15,6 +15,10 @@ func CrawlHTMLArticles(link, category string) ([]model.Article, error) {
 		colly.AllowedDomains("hcmus.edu.vn"),
 	)
 
+	c.OnRequest(func(r *colly.Request) {
+		r.Headers.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36")
+	})
+
 	c.OnHTML(".content.entry .cmsmasters_archive_item_title.entry-title a",
 		func(e *colly.HTMLElement) {
 			title := e.Text

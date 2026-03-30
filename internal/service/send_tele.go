@@ -5,6 +5,7 @@ import (
 	"hcmus-news-tele-bot/internal/model"
 	"log"
 	"strconv"
+	"strings"
 
 	tele "gopkg.in/telebot.v4"
 )
@@ -14,7 +15,11 @@ func SendTele(b *tele.Bot, users []string, res model.SummaryResult) {
 		return
 	}
 
-	msg := fmt.Sprintf("📰 <b>%s</b>\n\n%s", res.Article.Title, res.Summary)
+	title := strings.TrimSpace(res.Article.Title)
+	summary := strings.TrimSpace(res.Summary)
+	link := res.Article.URL
+
+	msg := fmt.Sprintf("📰 [TIN MỚI]: <b>%s</b>\n\n%s\nChi tiết xem tại: %s", title, summary, link)
 	for _, uID := range users {
 		chatID, err := strconv.ParseInt(uID, 10, 64)
 		if err != nil {

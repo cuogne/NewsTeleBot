@@ -5,25 +5,46 @@ import (
 	"fmt"
 	"hcmus-news-tele-bot/internal/model"
 	"os"
+	"strings"
+	"sync"
 
 	"github.com/google/generative-ai-go/genai"
 	"google.golang.org/api/option"
 )
 
-func SummarizeContentWithGemini(content string, link string) (model.SummaryResult, error) {
-	ctx := context.Background()
-	geminiKey := os.Getenv("GEMINI_API_KEY")
-	if geminiKey == "" {
-		return model.SummaryResult{}, fmt.Errorf("GEMINI_API_KEY is not set in environment variables")
-	}
+var (
+	geminiClient *genai.Client
+	geminiOnce   sync.Once
+	initErr      error
+)
 
-	client, err := genai.NewClient(ctx,
-		option.WithAPIKey(geminiKey),
-	)
+func getGeminiClient(ctx context.Context) (*genai.Client, error) {
+	geminiOnce.Do(func() {
+		geminiKey := os.Getenv("GEMINI_API_KEY")
+		if geminiKey == "" {
+			initErr = fmt.Errorf("GEMINI_API_KEY is not set in environment variables")
+			return
+		}
+
+		client, err := genai.NewClient(ctx, option.WithAPIKey(geminiKey))
+		if err != nil {
+			initErr = err
+			return
+		}
+
+		geminiClient = client
+	})
+
+	return geminiClient, initErr
+}
+
+func SummarizeContentWithGemini(content string) (model.SummaryResult, error) {
+	ctx := context.Background()
+
+	client, err := getGeminiClient(ctx)
 	if err != nil {
 		return model.SummaryResult{}, err
 	}
-	defer client.Close()
 
 	geminiModel := client.GenerativeModel("gemini-2.5-flash")
 	geminiModel.SetTemperature(0.7)
@@ -35,8 +56,7 @@ func SummarizeContentWithGemini(content string, link string) (model.SummaryResul
 		- Chọn những dòng quan trọng/hấp dẫn để tóm tắt -> người dùng hứng thú -> vào link đọc tiếp.
 		- Không cần chào hỏi, vô thẳng nội dung chính, không cần nói thêm gì khác.
 		- Nếu tóm tắt xong, nội dung có câu: Trang web này sử dụng cookie, thì không ghi đoạn này, nếu không đủ nội dung thì để rỗng.
-		- Ở cuối tóm tắt, xuống dòng 1 cái, ghi câu: Chi tiết xem tại: %s.
-		Nội dung bài viết như sau: %s`, link, content)
+		Nội dung bài viết như sau: %s`, content)
 
 	resp, err := geminiModel.GenerateContent(ctx, genai.Text(prompt))
 	if err != nil {
@@ -46,13 +66,13 @@ func SummarizeContentWithGemini(content string, link string) (model.SummaryResul
 		return model.SummaryResult{Summary: "Không có phản hồi từ AI"}, nil
 	}
 
-	var summary string
+	var summary strings.Builder
 	for _, part := range resp.Candidates[0].Content.Parts {
-		summary += fmt.Sprintf("%v", part)
+		fmt.Fprint(&summary, part)
 	}
 
 	return model.SummaryResult{
-		Summary:         summary,
+		Summary:         strings.TrimSpace(summary.String()),
 		PromptToken:     int(resp.UsageMetadata.PromptTokenCount),
 		CompletionToken: int(resp.UsageMetadata.CandidatesTokenCount),
 	}, nil
