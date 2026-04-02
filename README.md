@@ -3,7 +3,7 @@
 > tinh nang thong bao tin moi cua [bot discord](https://github.com/cuogne/discord-bot/blob/master/commands/fit-hcmus-news/INSTRUCTION.md) duoc tach ra mot phien ban cho telegram va duoc nang cap.
 
 <p align="center">
-<img src="./img/goaway.png" alt="golangmascot" height="300" />
+<img src="./assets/goaway.png" alt="golangmascot" height="250" />
 </p>
 
 ## <samp> 0. Cài đặt </samp>
@@ -30,10 +30,12 @@
 <details>
 <summary><samp>Nguồn tin tức: HCMUS</samp></summary>
 
+<br />
+
 | Nguồn | URL |
 | ---- | --- |
 | Thông tin dành cho sinh viên | https://hcmus.edu.vn/category/dao-tao/dai-hoc/thong-tin-danh-cho-sinh-vien |
-| Lịch thi/Thông báo từ Phòng khảo thí | http://ktdbcl.hcmus.edu.vn/ |
+| Lịch thi/Thông báo phòng khảo thí | http://ktdbcl.hcmus.edu.vn/ |
 | Khoa CNTT - FIT@HCMUS | https://www.fit.hcmus.edu.vn/vn/Default.aspx?tabid=53 |
 
 > Đây là các nguồn chính thống được bot crawl, có thể sẽ được update thêm.
@@ -48,17 +50,17 @@
 
 | Command |
 | ------------------------------------------------------------ |
-|<img src="./img/command.png" width="900" /> |
+|<img src="./assets/command.png" width="860" /> |
 
 ### Demo
 
 | PC/Laptop| Mobile |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| <img src="./img/demo_laptop.png" width="600" /> | <img src="./img/demo_mobile.png" height="550" /> |
+| <img src="./assets/demo_laptop.png" width="600" /> | <img src="./assets/demo_mobile.png" height="500" /> |
 
 | Thông báo |
 | ------------------------------------------------------------ |
-|<img src="./img/demo_notice.png" width="900" /> |
+|<img src="./assets/demo_notice.png" width="860" /> |
 
 > Lưu ý: Bot chỉ gửi cho chat riêng, không hỗ trợ chat nhóm.
 
