@@ -3,8 +3,21 @@
 > tinh nang thong bao tin moi cua [bot discord](https://github.com/cuogne/discord-bot/blob/master/commands/fit-hcmus-news/INSTRUCTION.md) duoc tach ra mot phien ban cho telegram va duoc nang cap.
 
 <p align="center">
-<img src="https://media.licdn.com/dms/image/v2/D4E12AQE82cn9WoN0pw/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1682192518638?e=1776297600&v=beta&t=VlhJlzqmLGJao656IEt9gf2R0HUE6h9C0KQ7tuE5ptI" alt="golangmascot" height="300" />
+<img src="./img/goaway.png" alt="golangmascot" height="300" />
 </p>
+
+## <samp> 0. Cài đặt </samp>
+
+<details>
+<summary><samp> click here (for users) </samp></summary>
+
+<br />
+
+> Cài đặt app Telegram trên [PC/Laptop](https://desktop.telegram.org/) | [Android](https://play.google.com/store/apps/details?id=org.telegram.messenger&hl=vi) | [iOS](https://apps.apple.com/vn/app/telegram-messenger/id686449807?l=vi)
+
+> Start bot: [https://t.me/hcmus_tintuc_bot](https://t.me/hcmus_tintuc_bot)
+
+</details>
 
 ## <samp> 1. Advanced features </samp>
 
@@ -15,13 +28,16 @@
 - Sử dụng goroutines, channel và worker pool của Go để xử lý đồng thời, tăng hiệu suất.
 
 <details>
-	<summary> <samp> Nguồn tin tức: </samp></summary>
-	<ul>
-		<li>FIT@HCMUS: <a href="https://www.fit.hcmus.edu.vn/vn/Default.aspx?tabid=53">https://www.fit.hcmus.edu.vn/vn/Default.aspx?tabid=53</a></li>
-		<li>Lịch thi - Phòng khảo thí: <a href="http://ktdbcl.hcmus.edu.vn/">http://ktdbcl.hcmus.edu.vn/</a></li>
-		<li>Thông báo - Phòng khảo thí: <a href="http://ktdbcl.hcmus.edu.vn/">http://ktdbcl.hcmus.edu.vn/</a></li>
-		<li>Thông tin dành cho sinh viên - HCMUS: <a href="https://hcmus.edu.vn/category/dao-tao/dai-hoc/thong-tin-danh-cho-sinh-vien">https://hcmus.edu.vn/category/dao-tao/dai-hoc/thong-tin-danh-cho-sinh-vien</a></li>
-	</ul>
+<summary><samp>Nguồn tin tức: HCMUS</samp></summary>
+
+| Nguồn | URL |
+| ---- | --- |
+| Thông tin dành cho sinh viên | https://hcmus.edu.vn/category/dao-tao/dai-hoc/thong-tin-danh-cho-sinh-vien |
+| Lịch thi/Thông báo từ Phòng khảo thí | http://ktdbcl.hcmus.edu.vn/ |
+| Khoa CNTT - FIT@HCMUS | https://www.fit.hcmus.edu.vn/vn/Default.aspx?tabid=53 |
+
+> Đây là các nguồn chính thống được bot crawl, có thể sẽ được update thêm.
+
 </details>
 
 ## <samp> 2. Telegram commands </samp>
@@ -30,11 +46,27 @@
 - `/subscribe`: dang ky nhan thong bao.
 - `/unsubscribe`: huy nhan thong bao.
 
+| Command |
+| ------------------------------------------------------------ |
+|<img src="./img/command.png" width="900" /> |
+
+### Demo
+
+| PC/Laptop| Mobile |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| <img src="./img/demo_laptop.png" width="600" /> | <img src="./img/demo_mobile.png" height="550" /> |
+
+| Thông báo |
+| ------------------------------------------------------------ |
+|<img src="./img/demo_notice.png" width="900" /> |
+
 > Lưu ý: Bot chỉ gửi cho chat riêng, không hỗ trợ chat nhóm.
 
 <details>
-	<summary> <samp> Factos 1: </samp></summary>
-	> <i>maybe toi se xoa tinh nang nay ben bot discord va chi phat trien them ben nay (neu co thoi gian) (🐳) </i>
+<summary><samp>Factos 1:</samp></summary>
+
+> <i>maybe toi se xoa tinh nang nay ben bot discord va chi phat trien them ben nay (neu co thoi gian) (🐳)</i>
+
 </details>
 
 
@@ -51,6 +83,69 @@
 - **Deployment**: Docker + CI/CD pipeline (GitHub Actions)
 
 <details>
-	<summary> <samp> Factos 2: </samp></summary>
-	> <i>t thay code bang golang suong hon js (i'm addicted to golang lol xD)</i>
+<summary><samp>Factos 2:</samp></summary>
+
+> <i>t thay code bang golang suong hon js (i'm addicted to golang lol xD)</i>
+
+</details>
+
+## <samp> 4. Run (for dev) </samp>
+
+<details>
+<summary><samp> click here (if u want to run it locally)</samp></summary>
+
+<br />
+
+B1. Đảm bảo đã cài go 1.26.1: [Go](https://go.dev/doc/install)
+
+```zsh
+brew install go@1.26 # for homebrew (macOS)
+
+go --version # check version
+```
+
+B2. Clone repo:
+```zsh
+git clone https://github.com/cuogne/NewsTeleBot.git
+```
+
+cd vào thư mục
+```zsh
+cd NewsTeleBot
+```
+
+B3. Cài dependencies:
+```go
+go mod tidy
+```
+
+hoặc:
+```zsh
+make deps
+```
+
+
+B4. tạo file `.env` dựa theo file [.env.example](.env.example) và điền thông tin
+```zsh
+TELEGRAM_BOT_TOKEN=your_telegram_bot_token
+SUPABASE_URL=your_supabase_url
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+> Telegram Bot Token: Tạo bot trên Telegram bằng cách nhắn tin với [BotFather](https://t.me/BotFather), gõ `/newbot` và làm theo hướng dẫn.
+
+> Supabase URL: Tạo project trên [Supabase](https://supabase.com/), chạy script tạo database trong [db/database.sql](db/database.sql) và lấy URL trong `Connect > Session pooler`.
+
+> Gemini API Key: tạo tài khoản trên [Google AI Studio](https://aistudio.google.com/), chọn `Get API Key` và lấy key.
+
+B5. Chạy bot:
+```zsh
+go run ./cmd/bot # chạy trực tiếp
+
+go build -o ./bin/bot ./cmd/bot # build thành executable
+
+make run # chạy bằng Makefile, lệnh như chạy trực tiếp
+
+make dev # chạy ở chế độ dev, có hot reload (sử dụng air)
+```
 </details>
