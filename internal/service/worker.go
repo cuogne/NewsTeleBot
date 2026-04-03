@@ -9,39 +9,32 @@ func Worker(id int, jobs <-chan model.SummaryJob, results chan<- model.SummaryRe
 	for job := range jobs {
 		category := strings.ToLower(job.Category)
 
-		// for "lichthi" and "thongbao", do not summarize (it's so short)
-		if category == "lichthi" || category == "thongbao" {
-			results <- model.SummaryResult{
+		emptyResult := func() model.SummaryResult {
+			return model.SummaryResult{
 				Article:         job.Article,
 				Category:        job.Category,
-				Summary:         job.Article.URL,
+				Summary:         "",
 				PromptToken:     0,
 				CompletionToken: 0,
 			}
+		}
+
+		// for "lichthi" and "thongbao", do not summarize (it's so short)
+		switch category {
+		case "thongbao", "lichthi":
+			results <- emptyResult()
 			continue
 		}
 
 		content, err := GetContentFromURL(job.Article.URL)
 		if err != nil {
-			results <- model.SummaryResult{
-				Article:         job.Article,
-				Category:        job.Category,
-				Summary:         "",
-				PromptToken:     0,
-				CompletionToken: 0,
-			}
+			results <- emptyResult()
 			continue
 		}
 
 		summary, err := SummarizeContentWithGemini(content)
 		if err != nil {
-			results <- model.SummaryResult{
-				Article:         job.Article,
-				Category:        job.Category,
-				Summary:         "",
-				PromptToken:     0,
-				CompletionToken: 0,
-			}
+			results <- emptyResult()
 			continue
 		}
 
