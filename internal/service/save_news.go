@@ -10,7 +10,7 @@ import (
 )
 
 func SaveToDB(dbPool *pgxpool.Pool, res model.SummaryResult) {
-	if res.Summary == "" {
+	if res.Article.URL == "" || res.Article.Title == "" {
 		return
 	}
 
