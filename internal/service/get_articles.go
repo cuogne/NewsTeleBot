@@ -38,7 +38,7 @@ func GetArticles() ([]model.Article, error) {
 		close(ch)
 	}()
 
-	var articles []model.Article
+	var articles = make([]model.Article, 0, len(config.Feeds)*10)
 
 	for listArticles := range ch {
 		if listArticles.Err != nil {
