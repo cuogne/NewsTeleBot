@@ -15,8 +15,8 @@ dist/
 
 # Tests and local docs (not needed at runtime build)
 test/
-Flow.md
 README.md
+assets/
 
 # OS/editor files
 .DS_Store
