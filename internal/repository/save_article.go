@@ -15,7 +15,8 @@ func SaveArticle(
 	res model.SummaryResult,
 ) error {
 
-	var table string // variable to hold table query
+	table := ""             // variable to hold table query
+	numArticlesToKeep := 20 // store 20 articles per category
 
 	switch res.Category {
 	case "fithcmus":
@@ -58,11 +59,11 @@ func SaveArticle(
 		where url in (
 			select url from %s
 			order by send_at desc nulls last, url desc
-			offset 20
+			offset $1
 		)
 	`, table, table)
 
-	_, err = tx.Exec(ctx, pruneQuery)
+	_, err = tx.Exec(ctx, pruneQuery, numArticlesToKeep)
 	if err != nil {
 		return fmt.Errorf("failed to prune old articles in %s: %w", table, err)
 	}

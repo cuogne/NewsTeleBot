@@ -20,7 +20,7 @@ func Unsubscribe(dbPool *pgxpool.Pool) tele.HandlerFunc {
 
 		err := repository.UnsubscribeUser(dbPool, ctx, user_id)
 		if err != nil {
-			log.Fatal(err)
+			log.Printf("Lỗi hủy đăng ký user %s: %v", user_id, err)
 			return c.Send("Có lỗi xảy ra khi hủy đăng ký nhận thông báo, vui lòng thử lại sau!")
 		}
 

@@ -13,7 +13,8 @@ func GetArticle(
 	ctx context.Context,
 	category string,
 ) ([]model.Article, error) {
-	var query string
+
+	query := ""
 	switch category {
 	case "fithcmus":
 		query = `select title, url from fitnews`

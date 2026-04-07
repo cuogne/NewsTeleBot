@@ -2,10 +2,13 @@ package service
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"hcmus-news-tele-bot/config"
 	"hcmus-news-tele-bot/internal/model"
 	"hcmus-news-tele-bot/internal/repository"
 	"log"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -13,7 +16,7 @@ import (
 func FilterNewArticles(
 	dbPool *pgxpool.Pool,
 	articles []model.Article,
-) []model.SummaryJob {
+) ([]model.SummaryJob, error) {
 	// categories := []string{"fithcmus", "lichthi", "thongbao", "hcmus"} // luoi qa nen set cung data
 	categories := make([]string, len(config.Feeds))
 	for i, feed := range config.Feeds {
@@ -21,11 +24,21 @@ func FilterNewArticles(
 	}
 
 	existUrls := make(map[string]bool)
+	var lookupErrors []error
 
 	for _, category := range categories {
-		dataArticles, err := repository.GetArticle(dbPool, context.Background(), category)
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		dataArticles, err := repository.GetArticle(dbPool, ctx, category)
+		cancel() // ensure context is canceled after use
+
+		/*
+			catch error and skip category,
+			do not return immediately to avoid losing all new articles
+			if one category has db issue
+		*/
 		if err != nil {
 			log.Printf("Error in db %s: %v\n", category, err)
+			lookupErrors = append(lookupErrors, fmt.Errorf("category %s: %w", category, err))
 			continue
 		}
 		for _, dn := range dataArticles {
@@ -43,5 +56,9 @@ func FilterNewArticles(
 		}
 	}
 
-	return newArticles
+	if len(lookupErrors) > 0 {
+		return nil, errors.Join(lookupErrors...)
+	}
+
+	return newArticles, nil
 }

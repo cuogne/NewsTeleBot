@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"log"
+	"sync/atomic"
 
 	"hcmus-news-tele-bot/internal/model"
 	"hcmus-news-tele-bot/internal/repository"
@@ -13,11 +14,13 @@ import (
 	tele "gopkg.in/telebot.v4"
 )
 
+var cronCycleRunning atomic.Bool
+
 func StartCronJob(b *tele.Bot, dbPool *pgxpool.Pool) {
 	c := cron.New()
-	time := "@every 10m" // every 10 minutes
+	schedule := "@every 10m" // every 10 minutes
 
-	_, err := c.AddFunc(time, func() {
+	_, err := c.AddFunc(schedule, func() {
 		runCronCycle(b, dbPool)
 	})
 	if err != nil {
@@ -29,6 +32,12 @@ func StartCronJob(b *tele.Bot, dbPool *pgxpool.Pool) {
 }
 
 func runCronCycle(b *tele.Bot, dbPool *pgxpool.Pool) {
+	if !cronCycleRunning.CompareAndSwap(false, true) {
+		log.Println("Skip cron tick: previous cycle is still running")
+		return
+	}
+	defer cronCycleRunning.Store(false)
+
 	// crawl all news
 	articles, err := service.GetArticles()
 	if err != nil {
@@ -37,7 +46,12 @@ func runCronCycle(b *tele.Bot, dbPool *pgxpool.Pool) {
 	}
 
 	// filter new articles
-	newArticles := service.FilterNewArticles(dbPool, articles)
+	newArticles, err := service.FilterNewArticles(dbPool, articles)
+	if err != nil {
+		log.Printf("Error filtering articles: %v\n", err)
+		return
+	}
+
 	if len(newArticles) == 0 {
 		return
 	}
@@ -51,6 +65,7 @@ func runCronCycle(b *tele.Bot, dbPool *pgxpool.Pool) {
 	}
 
 	for _, a := range newArticles {
+		log.Println("[NEWS]: ", a.Article.Title)
 		jobs <- a
 	}
 	close(jobs)
