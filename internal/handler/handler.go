@@ -38,6 +38,20 @@ func runCronCycle(b *tele.Bot, dbPool *pgxpool.Pool) {
 	}
 	defer cronCycleRunning.Store(false)
 
+	// get subscribed users first
+	users, err := repository.GetSubscribedUsers(dbPool, context.Background())
+	if err != nil {
+		// no user -> no need to crawl and send
+		log.Printf("Error while getting subscribed users: %v\n", err)
+		return
+	}
+
+	// check user count
+	if len(users) == 0 {
+		log.Println("No subscribed users found")
+		return
+	}
+
 	// crawl all news
 	articles, err := service.GetArticles()
 	if err != nil {
@@ -68,12 +82,6 @@ func runCronCycle(b *tele.Bot, dbPool *pgxpool.Pool) {
 		jobs <- a
 	}
 	close(jobs)
-
-	// get subscribed users
-	users, err := repository.GetSubscribedUsers(dbPool, context.Background())
-	if err != nil {
-		log.Printf("Error while getting subscribed users: %v\n", err)
-	}
 
 	for range newArticles {
 		res := <-results                // receive summary from gemini
