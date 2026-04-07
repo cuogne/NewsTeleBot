@@ -4,10 +4,6 @@
   <img src="./assets/fly_gopher.png" alt="golangmascot" width="400" />
 </p>
 
-<!-- <p align="center">
-  <img src="./assets/kite_gopher_yellow.png" alt="golangmascot" width="200" />
-</p> -->
-
 <p align="center"><samp> Bot Telegram crawl tin tức của HCMUS </samp></p>
 
 <p align="center">
@@ -16,7 +12,7 @@
 <img src="https://img.shields.io/badge/AI-Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="gemini" />
 </p>
 
-## <samp> why </samp>
+## <samp> what </samp>
 
 > tinh nang thong bao tin moi cua [bot discord](https://github.com/cuogne/discord-bot/blob/master/commands/fit-hcmus-news/INSTRUCTION.md) duoc tach ra mot phien ban cho telegram va nang cap hon.
 
@@ -29,7 +25,7 @@
 
 > Cài đặt app Telegram trên [PC/Laptop](https://desktop.telegram.org/) | [Android](https://play.google.com/store/apps/details?id=org.telegram.messenger&hl=vi) | [iOS](https://apps.apple.com/vn/app/telegram-messenger/id686449807?l=vi)
 
-> Start bot: [https://t.me/hcmus_tintuc_bot](https://t.me/hcmus_tintuc_bot)
+> Click vào link và start bot: [https://t.me/hcmus_tintuc_bot](https://t.me/hcmus_tintuc_bot)
 
 </details>
 
@@ -43,36 +39,21 @@
 
 > Lưu ý: Bot chỉ hỗ trợ private chat (chat riêng/cá nhân), không hỗ trợ group chat.
 
-<!-- <details>
-<summary><samp>Nguồn tin tức: HCMUS</samp></summary>
-
-<br />
-
-| Nguồn | URL |
-| ---- | --- |
-| Thông tin dành cho sinh viên | https://hcmus.edu.vn/category/dao-tao/dai-hoc/thong-tin-danh-cho-sinh-vien |
-| Lịch thi/Thông báo phòng khảo thí | http://ktdbcl.hcmus.edu.vn/ |
-| Khoa CNTT - FIT@HCMUS | https://www.fit.hcmus.edu.vn/vn/Default.aspx?tabid=53 |
-
-> Đây là các nguồn chính thống được bot crawl, có thể sẽ được update thêm.
-
-</details> -->
-
-## <samp> 2. News Resources </samp>
+## <samp> 2. News Sources </samp>
 
 | Category | URL |
 | ---- | --- |
 | Thông tin dành cho sinh viên | https://hcmus.edu.vn/category/dao-tao/dai-hoc/thong-tin-danh-cho-sinh-vien |
-| Lịch thi - Phòng khảo thí | http://ktdbcl.hcmus.edu.vn/ |
-| Thông báo - Phòng khảo thí | http://ktdbcl.hcmus.edu.vn/ |
-| Khoa CNTT - FIT@HCMUS | https://www.fit.hcmus.edu.vn/vn/Default.aspx?tabid=53 |
+| Lịch thi - Phòng khảo thí | https://ktdbcl.hcmus.edu.vn/index.php/cong-tac-kh-o-thi/l-ch-thi-h-c-ky |
+| Thông báo - Phòng khảo thí | https://ktdbcl.hcmus.edu.vn/index.php/thong-bao |
+| Khoa CNTT - FIT@HCMUS | https://www.fit.hcmus.edu.vn/tin-tuc |
 
 <details>
 <summary><samp>ảnh meme của Gopher: </samp></summary>
   
 <br />
   
-> [https://github.com/nlepage/gophers](https://github.com/nlepage/gophers)
+> source image: [https://github.com/nlepage/gophers](https://github.com/nlepage/gophers)
 
 </details>
 
@@ -80,27 +61,34 @@
 
 <table>
   <tr>
-    <td valign="top" width="70%">
+    <td valign="top" width="75%">
       <p><b>Command</b></p>
       <p>
-        <code>/start</code> - Giới thiệu và hướng dẫn<br />
+        <code>/start</code> - Giới thiệu và hướng dẫn sử dụng bot<br />
         <code>/subscribe</code> - Đăng ký nhận thông báo<br />
         <code>/unsubscribe</code> - Hủy nhận thông báo
       </p>
-      <img src="./assets/command.png" alt="command-preview" width="700" />
+      <img src="./assets/command.png" alt="command-preview" width="800" />
     </td>
-    <td align="right" valign="top" width="30%">
-      <img src="./assets/kite_gopher_yellow.png" alt="golangmascot" width="170" />
+    <td align="right" valign="top" width="25%">
+      <img src="./assets/kite_gopher_yellow.png" alt="golangmascot" width="180" />
     </td>
   </tr>
 </table>
 
-<!-- | Command |
-| ------------------------------------------------------------ |
-|<img src="./assets/command.png" width="400" /> | -->
+<details>
+<summary><samp>Factos 1:</samp></summary>
 
+> <i>maybe toi se xoa tinh nang nay ben bot discord va chi phat trien them ben nay (neu co thoi gian) (🐳)</i>
 
-### Demo
+</details>
+
+## <samp> 4. Demo </samp>
+
+<details>
+<summary><samp>Click here to see demo</samp></summary>
+
+<br />
 
 <table align="center">
   <thead>
@@ -130,16 +118,10 @@
   </tbody>
 </table>
 
-
-<details>
-<summary><samp>Factos 1:</samp></summary>
-
-> <i>maybe toi se xoa tinh nang nay ben bot discord va chi phat trien them ben nay (neu co thoi gian) (🐳)</i>
-
 </details>
 
 
-## <samp> 3. Tech stack </samp>
+## <samp> 5. Tech stack </samp>
 
 - **Language**: Go 1.26.1
 - **Database**: PostgreSQL (Supabase)
@@ -158,7 +140,7 @@
 
 </details>
 
-## <samp> 4. Run (for dev) </samp>
+## <samp> 6. Run (for dev) </samp>
 
 <details>
 <summary><samp> click here (if u want to run it locally)</samp></summary>
@@ -185,6 +167,8 @@ B3. chạy file [setup.sh](setup.sh) đã được thiết lập sẳn trong rep
 bash setup.sh
 ```
 
+> shell trên giúp bạn cài đặt các dependency cần thiết của Go, tạo file `.env` dựa theo mẫu [.env.example](.env.example) và thiết lập hot reload.
+
 B4. Sau khi chạy xong, bạn sẽ có file `.env` trong thư mục với các biến môi trường cần thiết. 
 
 ```env
@@ -193,11 +177,11 @@ SUPABASE_URL=your_supabase_url
 GEMINI_API_KEY=your_gemini_api_key
 ```
 
-Thay các token trong file `.env` bằng token của bạn, cách lấy như sau:
+Thay các token trong file `.env` vừa được tạo bằng token của bạn, cách lấy như sau:
 
 - **Telegram Bot Token**: Cài đặt Telegram (link có ở trên), tạo bot trên Telegram bằng cách nhắn tin với [BotFather](https://t.me/BotFather), gõ `/newbot` và làm theo hướng dẫn.
 
-- **Supabase URL**: Login và tạo project trên [Supabase](https://supabase.com/), dán script tạo database trong [db/database.sql](db/database.sql) vào và chạy nó, sau đó lấy URL trong `Connect > Session pooler`.
+- **Supabase URL**: Login và tạo project trên [Supabase](https://supabase.com/), dán script tạo database trong [db/database.sql](db/database.sql) vào `SQL Editor` và run nó, sau đó chọn `Connect` và lấy URL trong `Connect > Session pooler`.
 
 - **Gemini API Key**: tạo tài khoản trên [Google AI Studio](https://aistudio.google.com/), chọn `Get API Key` và lấy key.
 
@@ -212,7 +196,7 @@ make dev # chạy ở chế độ dev, có hot reload (sử dụng air)
 go build -o ./bin/bot ./cmd/bot # build thành binary
 ```
 
-Bonus: Run thông qua docker:
+Run thông qua docker:
 
 ```zsh
 docker build -t hcmus-news-tele-bot .
@@ -222,5 +206,5 @@ docker run -d --env-file .env --name my-tele-bot hcmus-news-tele-bot
 </details>
 
 <p align="center">
-  <img src="./assets/heart_gopher.png" alt="golangmascot" width="150" />
+  <img src="./assets/heart_gopher.png" alt="golangmascot" width="120" />
 </p>
