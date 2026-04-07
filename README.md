@@ -41,12 +41,12 @@
 
 ## <samp> 2. News Sources </samp>
 
-| Category | URL |
-| ---- | --- |
+| Category                     | URL                                                                        |
+| ---------------------------- | -------------------------------------------------------------------------- |
 | Thông tin dành cho sinh viên | https://hcmus.edu.vn/category/dao-tao/dai-hoc/thong-tin-danh-cho-sinh-vien |
-| Lịch thi - Phòng khảo thí | https://ktdbcl.hcmus.edu.vn/index.php/cong-tac-kh-o-thi/l-ch-thi-h-c-ky |
-| Thông báo - Phòng khảo thí | https://ktdbcl.hcmus.edu.vn/index.php/thong-bao |
-| Khoa CNTT - FIT@HCMUS | https://www.fit.hcmus.edu.vn/tin-tuc |
+| Lịch thi - Phòng khảo thí    | https://ktdbcl.hcmus.edu.vn/index.php/cong-tac-kh-o-thi/l-ch-thi-h-c-ky    |
+| Thông báo - Phòng khảo thí   | https://ktdbcl.hcmus.edu.vn/index.php/thong-bao                            |
+| Khoa CNTT - FIT@HCMUS        | https://www.fit.hcmus.edu.vn/tin-tuc                                       |
 
 <details>
 <summary><samp>ảnh meme của Gopher: </samp></summary>
@@ -120,7 +120,6 @@
 
 </details>
 
-
 ## <samp> 5. Tech stack </samp>
 
 - **Language**: Go 1.26.1
@@ -156,6 +155,7 @@ go version # check version
 ```
 
 B2. Clone repo này về và di chuyển vào thư mục:
+
 ```zsh
 git clone https://github.com/cuogne/NewsTeleBot.git
 
@@ -163,13 +163,14 @@ cd NewsTeleBot
 ```
 
 B3. chạy file [setup.sh](setup.sh) đã được thiết lập sẳn trong repo để setup:
+
 ```bash
 bash setup.sh
 ```
 
 > shell trên giúp bạn cài đặt các dependency cần thiết của Go, tạo file `.env` dựa theo mẫu [.env.example](.env.example) và thiết lập hot reload.
 
-B4. Sau khi chạy xong, bạn sẽ có file `.env` trong thư mục với các biến môi trường cần thiết. 
+B4. Sau khi chạy xong, bạn sẽ có file `.env` trong thư mục với các biến môi trường cần thiết.
 
 ```env
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token
@@ -186,6 +187,7 @@ Thay các token trong file `.env` vừa được tạo bằng token của bạn,
 - **Gemini API Key**: tạo tài khoản trên [Google AI Studio](https://aistudio.google.com/), chọn `Get API Key` và lấy key.
 
 B5. Run bot:
+
 ```zsh
 go run ./cmd/bot # chạy trực tiếp
 
@@ -196,11 +198,65 @@ make dev # chạy ở chế độ dev, có hot reload (sử dụng air)
 go build -o ./bin/bot ./cmd/bot # build thành binary
 ```
 
-Run thông qua docker:
+Hoặc run thông qua docker:
 
 ```zsh
 docker build -t hcmus-news-tele-bot .
 docker run -d --env-file .env --name my-tele-bot hcmus-news-tele-bot
+```
+
+### Lưu ý khi mở rộng feeds mới:
+
+Nếu bạn muốn phát triển thêm nhiều feeds mới tuân theo cấu trúc hiện có, vui lòng đảm bảo:
+
+1. Tạo feeds mới trong [resource.go](config/resource.go) với cấu trúc của type `Resource`
+
+```go
+// resource.go
+type Resource struct {
+	URL      string
+	Name     string
+	Category string
+	Format   string
+}
+```
+
+2. Tạo table mới trong [database.sql](db/database.sql) theo cấu trúc schema đã có:
+
+```sql
+-- database.sql
+create table <name_of_table_is_equal_to_category> (
+  url text primary key,
+  title text not null,
+  send_at timestamp,
+  prompt_token int,
+  completion_token int
+);
+```
+
+3. Tên Category trong [resource.go](config/resource.go) phải trùng với tên table trong [database.sql](db/database.sql).
+
+> ví dụ: nếu bạn tạo feeds có category = "tinmoi", bạn phải tạo table "tinmoi" trong db/database.sql.
+
+Vì thiết lập tên table trong db = category trong feeds để dễ quản lý và tránh lỗi khi thêm feeds mới. Nếu không khớp, bot sẽ không crawl được dữ liệu và có thể bị lỗi.
+
+> Hoặc bạn sẽ phải sửa code trong repository hoặc service để khớp với lựa chọn của bạn =))
+
+Ngoài ra, bạn phải viết thêm file crawler cho feeds mới của bạn trong thư mục [crawler](internal/crawler) (vì khả năng cấu trúc html sẽ không khớp với script hiện tại) và thêm nó vào case trong file [crawl.go](internal/crawler/crawl.go). 
+
+Và case format trong [crawl.go](internal/crawler/crawl.go) phải khớp với `Format` trong [resource.go](config/resource.go) của bạn.
+
+```go
+// crawl.go
+// ...
+case "your_new_format":
+  listArticles, err := your_crawl_function(feed.URL, feed.Category)
+
+  ch <- model.ListArticles{
+    Articles: listArticles,
+    Category: feed.Category,
+    Err:      err,
+  }
 ```
 
 </details>
