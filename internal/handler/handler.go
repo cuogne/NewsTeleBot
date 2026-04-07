@@ -49,7 +49,6 @@ func runCronCycle(b *tele.Bot, dbPool *pgxpool.Pool) {
 	newArticles, err := service.FilterNewArticles(dbPool, articles)
 	if err != nil {
 		log.Printf("Error filtering articles: %v\n", err)
-		return
 	}
 
 	if len(newArticles) == 0 {

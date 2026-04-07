@@ -19,9 +19,9 @@ func Worker(id int, jobs <-chan model.SummaryJob, results chan<- model.SummaryRe
 			}
 		}
 
-		// for "lichthi" and "thongbao", do not summarize (it's so short)
+		// for "lichthipkt" and "thongbaopkt", do not summarize (it's so short)
 		switch category {
-		case "thongbao", "lichthi":
+		case "thongbaopkt", "lichthipkt":
 			results <- emptyResult()
 			continue
 		}

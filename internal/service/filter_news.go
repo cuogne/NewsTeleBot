@@ -2,8 +2,6 @@ package service
 
 import (
 	"context"
-	"errors"
-	"fmt"
 	"hcmus-news-tele-bot/config"
 	"hcmus-news-tele-bot/internal/model"
 	"hcmus-news-tele-bot/internal/repository"
@@ -24,7 +22,7 @@ func FilterNewArticles(
 	}
 
 	existUrls := make(map[string]bool)
-	var lookupErrors []error
+	failedCategories := make(map[string]bool)
 
 	for _, category := range categories {
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -38,7 +36,7 @@ func FilterNewArticles(
 		*/
 		if err != nil {
 			log.Printf("Error in db %s: %v\n", category, err)
-			lookupErrors = append(lookupErrors, fmt.Errorf("category %s: %w", category, err))
+			failedCategories[category] = true
 			continue
 		}
 		for _, dn := range dataArticles {
@@ -48,16 +46,21 @@ func FilterNewArticles(
 
 	var newArticles []model.SummaryJob
 	for _, a := range articles {
+
+		/*
+			skip article if its category has db issue
+			to avoid losing all new articles if one category has db issue
+		*/
+		if failedCategories[a.Category] {
+			continue
+		}
+
 		if !existUrls[a.URL] {
 			newArticles = append(newArticles, model.SummaryJob{
 				Article:  a,
 				Category: a.Category,
 			})
 		}
-	}
-
-	if len(lookupErrors) > 0 {
-		return nil, errors.Join(lookupErrors...)
 	}
 
 	return newArticles, nil

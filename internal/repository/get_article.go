@@ -14,19 +14,8 @@ func GetArticle(
 	category string,
 ) ([]model.Article, error) {
 
-	query := ""
-	switch category {
-	case "fithcmus":
-		query = `select title, url from fitnews`
-	case "lichthi":
-		query = `select title, url from lichthi`
-	case "thongbao":
-		query = `select title, url from thongbaopkt`
-	case "hcmus":
-		query = `select title, url from hcmus`
-	default:
-		return nil, fmt.Errorf("unsupported category: %s", category)
-	}
+	table := category // define table name = category
+	query := fmt.Sprintf("select title, url from %s", table)
 
 	rows, err := db.Query(ctx, query)
 	if err != nil {

@@ -15,21 +15,8 @@ func SaveArticle(
 	res model.SummaryResult,
 ) error {
 
-	table := ""             // variable to hold table query
+	table := res.Category   // variable to hold table query
 	numArticlesToKeep := 20 // store 20 articles per category
-
-	switch res.Category {
-	case "fithcmus":
-		table = "fitnews"
-	case "lichthi":
-		table = "lichthi"
-	case "thongbao":
-		table = "thongbaopkt"
-	case "hcmus":
-		table = "hcmus"
-	default:
-		return fmt.Errorf("unsupported category for inserting: %s", res.Category)
-	}
 
 	query := fmt.Sprintf(`
 		insert into %s (url, title, send_at, prompt_token, completion_token)
