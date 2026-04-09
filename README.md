@@ -4,12 +4,15 @@
   <img src="./assets/fly_gopher.png" alt="golangmascot" width="400" />
 </p>
 
-<p align="center"><samp> Bot Telegram crawl tin tức của HCMUS </samp></p>
+<p align="center">
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=450&size=15&pause=1000&color=F7F7F7&center=true&vCenter=true&width=350&height=18&lines=%3E+Bot+telegram+crawl+tin+t%E1%BB%A9c+c%E1%BB%A7a+HCMUS" alt="Typing SVG" /></a>
+</p>
 
 <p align="center">
-<a href="https://t.me/hcmus_tintuc_bot"><img src="https://img.shields.io/badge/Telegram-Start%20Bot-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" alt="telegram" /></a>
-<img src="https://img.shields.io/badge/Go-1.26.1-00ADD8?style=for-the-badge&logo=go&logoColor=white" alt="go" />
-<img src="https://img.shields.io/badge/AI-Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="gemini" />
+<a href="https://t.me/hcmus_tintuc_bot"><img src="https://img.shields.io/badge/Telegram-Start%20Bot-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" alt="telegram" /></a>&nbsp;
+<img src="https://img.shields.io/badge/Go-1.26.1-00ADD8?style=for-the-badge&logo=go&logoColor=white" alt="go" />&nbsp;
+<img src="https://img.shields.io/badge/AI-Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="gemini" />&nbsp;
+<img src="https://img.shields.io/badge/Status-%20Active-2EA043?style=for-the-badge" alt="status-bot-active" />
 </p>
 
 ## <samp> what </samp>
@@ -21,11 +24,9 @@
 <details>
 <summary><samp> click here (for users) </samp></summary>
 
-<br />
+- Cài đặt app Telegram trên [PC/Laptop](https://desktop.telegram.org/) | [Android](https://play.google.com/store/apps/details?id=org.telegram.messenger&hl=vi) | [iOS](https://apps.apple.com/vn/app/telegram-messenger/id686449807?l=vi)
 
-> Cài đặt app Telegram trên [PC/Laptop](https://desktop.telegram.org/) | [Android](https://play.google.com/store/apps/details?id=org.telegram.messenger&hl=vi) | [iOS](https://apps.apple.com/vn/app/telegram-messenger/id686449807?l=vi)
-
-> Click vào link và start bot: [https://t.me/hcmus_tintuc_bot](https://t.me/hcmus_tintuc_bot)
+- Click vào link và start bot: [https://t.me/hcmus_tintuc_bot](https://t.me/hcmus_tintuc_bot)
 
 </details>
 
@@ -122,13 +123,13 @@
 
 ## <samp> 5. Tech stack </samp>
 
-- **Language**: Go 1.26.1
-- **Database**: PostgreSQL (Supabase)
-- **Crawler**: Colly (HTML), gofeed (RSS)
-- **Content extractor**: go-readability
-- **AI Summarization**: Gemini
-- **Telegram Bot**: Telebot v4
-- **Scheduler**: robfig/cron
+- **Language**: [Go 1.26.1](https://go.dev/doc/go1.26)
+- **Database**: [Supabase](https://supabase.com/) (PostgreSQL), [pgx/v5](https://github.com/jackc/pgx)
+- **Crawler**: [Colly](https://github.com/gocolly/colly) (HTML), [gofeed](https://github.com/gorhill/gofeed) (RSS)
+- **Content extractor**: [go-readability](https://github.com/go-shiori/go-readability)
+- **AI Summarization**: [Gemini](https://github.com/google/generative-ai-go)
+- **Telegram Bot**: [Telebot v4](https://github.com/tucnak/telebot)
+- **Scheduler**: [robfig/cron](https://github.com/robfig/cron)
 - **Concurrency**: Goroutines, Channels, sync.WaitGroup, Worker Pool
 - **Deployment**: Docker + CI/CD pipeline (GitHub Actions)
 
@@ -182,7 +183,7 @@ Thay các token trong file `.env` vừa được tạo bằng token của bạn,
 
 - **Telegram Bot Token**: Cài đặt Telegram (link có ở trên), tạo bot trên Telegram bằng cách nhắn tin với [BotFather](https://t.me/BotFather), gõ `/newbot` và làm theo hướng dẫn.
 
-- **Supabase URL**: Login và tạo project trên [Supabase](https://supabase.com/), dán script tạo database trong [db/database.sql](db/database.sql) vào `SQL Editor` và run nó, sau đó chọn `Connect` và lấy URL trong `Connect > Session pooler`.
+- **Supabase URL**: Login và tạo project trên [Supabase](https://supabase.com/), dán script tạo database trong [db/database.sql](db/database.sql) vào `SQL Editor` và run nó, sau đó chọn `Connect` và lấy URL trong `Session pooler`.
 
 - **Gemini API Key**: tạo tài khoản trên [Google AI Studio](https://aistudio.google.com/), chọn `Get API Key` và lấy key.
 
@@ -205,11 +206,13 @@ docker build -t hcmus-news-tele-bot .
 docker run -d --env-file .env --name my-tele-bot hcmus-news-tele-bot
 ```
 
+-----------
+
 ### Lưu ý khi mở rộng feeds mới:
 
 Nếu bạn muốn phát triển thêm nhiều feeds mới tuân theo cấu trúc hiện có, vui lòng đảm bảo:
 
-1. Tạo feeds mới trong [resource.go](config/resource.go) với cấu trúc của type `Resource`
+B1. Tạo feeds mới trong [resource.go](config/resource.go) với cấu trúc của type `Resource` và thêm vào slice `Feeds`:
 
 ```go
 // resource.go
@@ -219,9 +222,20 @@ type Resource struct {
 	Category string
 	Format   string
 }
+
+// thêm feeds mới ở đây
+var Feeds = []Resource{
+  // ...
+  {
+    URL:      "https://example.com/new-feed",
+    Name:     "the name of your feed",
+    Category: "the category of your feed (must match with table name in database.sql)",
+    Format:   "the format of your feed (must match with case in crawl.go)",
+  },
+}
 ```
 
-2. Tạo table mới trong [database.sql](db/database.sql) theo cấu trúc schema đã có:
+B2. Tạo table mới trong [database.sql](db/database.sql) theo cấu trúc schema đã có:
 
 ```sql
 -- database.sql
@@ -234,22 +248,20 @@ create table <name_of_table_is_equal_to_category> (
 );
 ```
 
-3. Tên Category trong [resource.go](config/resource.go) phải trùng với tên table trong [database.sql](db/database.sql).
+B3. Tên Category trong [resource.go](config/resource.go) phải trùng với tên table trong [database.sql](db/database.sql). Ví dụ: nếu bạn tạo feeds có category = "tinmoi", bạn phải tạo table "tinmoi" trong db/database.sql.
 
-> ví dụ: nếu bạn tạo feeds có category = "tinmoi", bạn phải tạo table "tinmoi" trong db/database.sql.
-
-Vì thiết lập tên table trong db = category trong feeds để dễ quản lý và tránh lỗi khi thêm feeds mới. Nếu không khớp, bot sẽ không crawl được dữ liệu và có thể bị lỗi.
+- Vì thiết lập tên table trong db = category trong feeds để dễ quản lý và tránh lỗi khi thêm feeds mới. Nếu không khớp, bot sẽ không select và insert được dữ liệu.
 
 > Hoặc bạn sẽ phải sửa code trong repository hoặc service để khớp với lựa chọn của bạn =))
 
-Ngoài ra, bạn phải viết thêm file crawler cho feeds mới của bạn trong thư mục [crawler](internal/crawler) (vì khả năng cấu trúc html sẽ không khớp với script hiện tại) và thêm nó vào case trong file [crawl.go](internal/crawler/crawl.go). 
+B4. Ngoài ra, bạn phải viết thêm file crawler cho feeds mới của bạn trong thư mục [crawler](internal/crawler) (vì web bạn thêm vào sẽ có cấu trúc html không khớp với script hiện tại) và thêm nó vào case trong file [crawl.go](internal/crawler/crawl.go). 
 
 Và case format trong [crawl.go](internal/crawler/crawl.go) phải khớp với `Format` trong [resource.go](config/resource.go) của bạn.
 
 ```go
 // crawl.go
 // ...
-case "your_new_format":
+case "your_format": // your_format = config.Feeds[idx].Format
   listArticles, err := your_crawl_function(feed.URL, feed.Category)
 
   ch <- model.ListArticles{
