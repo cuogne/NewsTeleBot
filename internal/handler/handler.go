@@ -4,31 +4,40 @@ import (
 	"context"
 	"log"
 	"sync/atomic"
+	"time"
 
 	"hcmus-news-tele-bot/internal/model"
 	"hcmus-news-tele-bot/internal/repository"
 	"hcmus-news-tele-bot/internal/service"
 
+	"github.com/go-co-op/gocron/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/robfig/cron/v3"
 	tele "gopkg.in/telebot.v4"
 )
 
 var cronCycleRunning atomic.Bool
 
-func StartCronJob(b *tele.Bot, dbPool *pgxpool.Pool) {
-	c := cron.New()
-	schedule := "@every 10m" // every 10 minutes
+const scheduleCycleDuration = 10 * time.Minute // run every 10 minutes
 
-	_, err := c.AddFunc(schedule, func() {
-		runCronCycle(b, dbPool)
-	})
+func StartCronJob(b *tele.Bot, dbPool *pgxpool.Pool) {
+	scheduler, err := gocron.NewScheduler()
+	if err != nil {
+		log.Fatalf("Error creating scheduler: %v", err)
+	}
+
+	_, err = scheduler.NewJob(
+		gocron.DurationJob(scheduleCycleDuration),
+
+		gocron.NewTask(func() {
+			runCronCycle(b, dbPool)
+		}),
+	)
 	if err != nil {
 		log.Fatalf("Error starting cron job: %v", err)
 	}
 
 	log.Println("cron job is working, 10 minutes per cycle")
-	c.Start()
+	scheduler.Start()
 }
 
 func runCronCycle(b *tele.Bot, dbPool *pgxpool.Pool) {

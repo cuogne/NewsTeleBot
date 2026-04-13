@@ -129,7 +129,7 @@
 - **Content extractor**: [go-readability](https://github.com/go-shiori/go-readability)
 - **AI Summarization**: [Gemini](https://github.com/googleapis/go-genai)
 - **Telegram Bot**: [Telebot v4](https://github.com/tucnak/telebot)
-- **Scheduler**: [robfig/cron](https://github.com/robfig/cron)
+- **Scheduler**: [gocron](https://github.com/go-co-op/gocron)
 - **Concurrency**: Goroutines, Channels, sync.WaitGroup, Worker Pool
 - **Deployment**: Docker + CI/CD pipeline (GitHub Actions)
 
