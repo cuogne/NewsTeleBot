@@ -8,8 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/google/generative-ai-go/genai"
-	"google.golang.org/api/option"
+	"google.golang.org/genai"
 )
 
 var (
@@ -26,7 +25,11 @@ func getGeminiClient(ctx context.Context) (*genai.Client, error) {
 			return
 		}
 
-		client, err := genai.NewClient(ctx, option.WithAPIKey(geminiKey))
+		client, err := genai.NewClient(ctx, &genai.ClientConfig{
+			APIKey:  geminiKey,
+			Backend: genai.BackendGeminiAPI,
+		})
+
 		if err != nil {
 			initErr = err
 			return
@@ -46,8 +49,9 @@ func SummarizeContentWithGemini(content string) (model.SummaryResult, error) {
 		return model.SummaryResult{}, err
 	}
 
-	geminiModel := client.GenerativeModel("gemini-2.5-flash")
-	geminiModel.SetTemperature(0.7)
+	configGemini := &genai.GenerateContentConfig{
+		Temperature: genai.Ptr[float32](0.7),
+	}
 
 	prompt := fmt.Sprintf(`
 		Bạn là một biên tập viên tóm tắt tin tức chuyên nghiệp. Nhiệm vụ của bạn là:
@@ -59,21 +63,26 @@ func SummarizeContentWithGemini(content string) (model.SummaryResult, error) {
 		- Nếu tóm tắt xong, nội dung có câu: Trang web này sử dụng cookie, thì không ghi đoạn này, nếu không đủ nội dung thì để rỗng.
 		Nội dung bài viết như sau: %s`, content)
 
-	resp, err := geminiModel.GenerateContent(ctx, genai.Text(prompt))
+	resp, err := client.Models.GenerateContent(
+		ctx,
+		"gemini-3-flash-preview",
+		genai.Text(prompt),
+		configGemini,
+	)
+
 	if err != nil {
 		return model.SummaryResult{}, err
 	}
-	if len(resp.Candidates) == 0 {
-		return model.SummaryResult{Summary: "Không có phản hồi từ AI"}, nil
-	}
 
-	var summary strings.Builder
-	for _, part := range resp.Candidates[0].Content.Parts {
-		fmt.Fprint(&summary, part)
+	summary := strings.TrimSpace(resp.Text())
+	if summary == "" {
+		return model.SummaryResult{
+			Summary: "Không có phản hồi từ AI",
+		}, nil
 	}
 
 	return model.SummaryResult{
-		Summary:         strings.TrimSpace(summary.String()),
+		Summary:         summary,
 		PromptToken:     int(resp.UsageMetadata.PromptTokenCount),
 		CompletionToken: int(resp.UsageMetadata.CandidatesTokenCount),
 	}, nil
