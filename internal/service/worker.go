@@ -2,6 +2,7 @@ package service
 
 import (
 	"hcmus-news-tele-bot/internal/model"
+	"log"
 	"strings"
 )
 
@@ -29,12 +30,22 @@ func Worker(id int, jobs <-chan model.SummaryJob, results chan<- model.SummaryRe
 		content, err := GetContentFromURL(job.Article.URL)
 		if err != nil {
 			results <- emptyResult()
+			log.Printf("Error getting content while fetching URL %s: %v", job.Article.URL, err)
+			continue
+		}
+
+		// content is empty -> no need to summarize, just return empty summary
+		// ("", err) or ("", nil)
+		if content == "" {
+			results <- emptyResult()
+			log.Printf("No content extracted from URL %s", job.Article.URL)
 			continue
 		}
 
 		summary, err := SummarizeContentWithGemini(content)
 		if err != nil {
 			results <- emptyResult()
+			log.Printf("Error summarizing content from URL %s: %v", job.Article.URL, err)
 			continue
 		}
 

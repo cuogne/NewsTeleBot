@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"log"
+	"strings"
 	"sync/atomic"
 	"time"
 
@@ -87,7 +88,7 @@ func runCronCycle(b *tele.Bot, dbPool *pgxpool.Pool) {
 	}
 
 	for _, a := range newArticles {
-		log.Println("[NEWS]: ", a.Article.Title)
+		log.Println("[NEWS]: ", strings.TrimSpace(a.Article.Title))
 		jobs <- a
 	}
 	close(jobs)

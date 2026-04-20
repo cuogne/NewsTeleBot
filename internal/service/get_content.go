@@ -16,7 +16,7 @@ func GetContentFromURL(link string) (string, error) {
 	}
 
 	client := &http.Client{
-		Timeout: 10 * time.Second,
+		Timeout: 30 * time.Second,
 	}
 
 	resp, err := client.Get(parsedURL.String())
