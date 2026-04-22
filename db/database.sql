@@ -53,3 +53,11 @@ create table thongbaopkt (
   prompt_token int,
   completion_token int
 );
+
+create table ctda (
+  url text primary key,
+  title text not null,
+  send_at timestamp,
+  prompt_token int,
+  completion_token int
+);
