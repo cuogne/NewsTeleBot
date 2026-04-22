@@ -48,6 +48,9 @@
 | Lịch thi - Phòng khảo thí    | https://ktdbcl.hcmus.edu.vn/index.php/cong-tac-kh-o-thi/l-ch-thi-h-c-ky    |
 | Thông báo - Phòng khảo thí   | https://ktdbcl.hcmus.edu.vn/index.php/thong-bao                            |
 | Khoa CNTT - FIT@HCMUS        | https://www.fit.hcmus.edu.vn/tin-tuc                                       |
+| CLC/APCS - CTĐA@HCMUS | https://www.ctda.hcmus.edu.vn/vi/thong-bao/ |
+
+> Note: Chương trình đại trà sài chung với khoa CNTT
 
 <details>
 <summary><samp>ảnh meme của Gopher: </samp></summary>
