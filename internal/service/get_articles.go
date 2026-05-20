@@ -50,6 +50,7 @@ func GetArticles() ([]model.Article, error) {
 		}
 		for i := range listArticles.Articles {
 			listArticles.Articles[i].Category = listArticles.Category
+			listArticles.Articles[i].URL = NormalizeArticleURL(listArticles.Articles[i].URL)
 		}
 		articles = append(articles, listArticles.Articles...)
 	}

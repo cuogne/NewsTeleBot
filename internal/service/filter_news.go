@@ -40,7 +40,7 @@ func FilterNewArticles(
 			continue
 		}
 		for _, dn := range dataArticles {
-			existUrls[dn.URL] = true
+			existUrls[NormalizeArticleURL(dn.URL)] = true
 		}
 	}
 
@@ -55,6 +55,7 @@ func FilterNewArticles(
 			continue
 		}
 
+		a.URL = NormalizeArticleURL(a.URL)
 		if !existUrls[a.URL] {
 			newArticles = append(newArticles, model.SummaryJob{
 				Article:  a,
