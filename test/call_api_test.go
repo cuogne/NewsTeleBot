@@ -7,7 +7,7 @@ import (
 
 func TestCrawl(t *testing.T) {
 	link := "https://www.ctda.hcmus.edu.vn/wp-json/wp/v2/posts?per_page=10&_fields=title,link"
-	articles, err := crawler.CrawlCTDAByAPI(link, "ctda")
+	articles, err := crawler.CrawlAPIArticles(link, "ctda")
 	if err != nil {
 		t.Errorf("Error occurred while crawling CTDA articles: %v", err)
 	}

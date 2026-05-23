@@ -45,12 +45,13 @@
 | Category                     | URL                                                                        |
 | ---------------------------- | -------------------------------------------------------------------------- |
 | Thông tin dành cho sinh viên | https://hcmus.edu.vn/category/dao-tao/dai-hoc/thong-tin-danh-cho-sinh-vien |
+| Tin tức chung - HCMUS | https://hcmus.edu.vn/category/tin-tuc/ |
 | Lịch thi - Phòng khảo thí    | https://ktdbcl.hcmus.edu.vn/index.php/cong-tac-kh-o-thi/l-ch-thi-h-c-ky    |
 | Thông báo - Phòng khảo thí   | https://ktdbcl.hcmus.edu.vn/index.php/thong-bao                            |
 | Khoa CNTT - FIT@HCMUS        | https://www.fit.hcmus.edu.vn/tin-tuc                                       |
 | CLC/APCS - CTĐA@HCMUS | https://www.ctda.hcmus.edu.vn/vi/thong-bao/ |
 
-> Note: Chương trình đại trà sài chung với khoa CNTT
+> Note: Chương trình chính quy CNTT sài chung với khoa CNTT
 
 <details>
 <summary><samp>ảnh meme của Gopher: </samp></summary>
@@ -128,7 +129,7 @@
 
 - **Language**: [Go 1.26.1](https://go.dev/doc/go1.26)
 - **Database**: [Supabase](https://supabase.com/) (PostgreSQL), [pgx/v5](https://github.com/jackc/pgx)
-- **Crawler**: [Colly](https://github.com/gocolly/colly) (HTML), [gofeed](https://github.com/gorhill/gofeed) (RSS)
+- **Crawler**: [Colly](https://github.com/gocolly/colly) (HTML), [gofeed](https://github.com/gorhill/gofeed) (RSS), [net/http](https://pkg.go.dev/net/http) (API)
 - **Content extractor**: [go-readability](https://github.com/go-shiori/go-readability)
 - **AI Summarization**: [Gemini](https://github.com/googleapis/go-genai)
 - **Telegram Bot**: [Telebot v4](https://github.com/tucnak/telebot)
@@ -184,7 +185,7 @@ GEMINI_API_KEY=your_gemini_api_key
 
 Thay các token trong file `.env` vừa được tạo bằng token của bạn, cách lấy như sau:
 
-- **Telegram Bot Token**: Cài đặt Telegram (link có ở trên), tạo bot trên Telegram bằng cách nhắn tin với [BotFather](https://t.me/BotFather), gõ `/newbot` và làm theo hướng dẫn.
+- **Telegram Bot Token**: Cài đặt Telegram theo link bên trên, tạo bot trên Telegram bằng cách nhắn tin với [BotFather](https://t.me/BotFather), gõ `/newbot` và làm theo hướng dẫn để lấy token và dán vào `.env`.
 
 - **Supabase URL**: Login và tạo project trên [Supabase](https://supabase.com/), dán script tạo database trong [db/database.sql](db/database.sql) vào `SQL Editor` và run nó, sau đó chọn `Connect` và lấy URL trong `Session pooler`.
 
@@ -206,72 +207,14 @@ Hoặc run thông qua docker:
 
 ```zsh
 docker build -t hcmus-news-tele-bot .
-docker run -d --env-file .env --name my-tele-bot hcmus-news-tele-bot
+docker run -d --env-file .env --name tele-bot --restart unless-stopped hcmus-news-tele-bot
 ```
 
------------
+Check logs và stats:
 
-### Lưu ý khi mở rộng feeds mới:
-
-Nếu bạn muốn phát triển thêm nhiều feeds mới tuân theo cấu trúc hiện có, vui lòng đảm bảo:
-
-B1. Tạo feeds mới trong [resource.go](config/resource.go) với cấu trúc của type `Resource` và thêm vào slice `Feeds`:
-
-```go
-// resource.go
-type Resource struct {
-	URL      string
-	Name     string
-	Category string
-	Format   string
-}
-
-// thêm feeds mới ở đây
-var Feeds = []Resource{
-  // ...
-  {
-    URL:      "https://example.com/new-feed",
-    Name:     "the name of your feed",
-    Category: "the category of your feed (must match with table name in database.sql)",
-    Format:   "the format of your feed (must match with case in crawl.go)",
-  },
-}
-```
-
-B2. Tạo table mới trong [database.sql](db/database.sql) theo cấu trúc schema đã có:
-
-```sql
--- database.sql
-create table <name_of_table_is_equal_to_category> (
-  url text primary key,
-  title text not null,
-  send_at timestamp,
-  prompt_token int,
-  completion_token int
-);
-```
-
-B3. Tên Category trong [resource.go](config/resource.go) phải trùng với tên table trong [database.sql](db/database.sql). Ví dụ: nếu bạn tạo feeds có category = "tinmoi", bạn phải tạo table "tinmoi" trong db/database.sql.
-
-- Vì thiết lập tên table trong db = category trong feeds để dễ quản lý và tránh lỗi khi thêm feeds mới. Nếu không khớp, bot sẽ không select và insert được dữ liệu.
-
-> Hoặc bạn sẽ phải sửa code trong repository hoặc service để khớp với lựa chọn của bạn =))
-
-B4. Ngoài ra, bạn phải viết thêm file crawler cho feeds mới của bạn trong thư mục [crawler](internal/crawler) (vì web bạn thêm vào sẽ có cấu trúc html không khớp với script hiện tại) và thêm nó vào case trong file [crawl.go](internal/crawler/crawl.go). 
-
-Và case format trong [crawl.go](internal/crawler/crawl.go) phải khớp với `Format` trong [resource.go](config/resource.go) của bạn.
-
-```go
-// crawl.go
-// ...
-case "your_format": // your_format = config.Feeds[idx].Format
-  listArticles, err := your_crawl_function(feed.URL, feed.Category)
-
-  ch <- model.ListArticles{
-    Articles: listArticles,
-    Category: feed.Category,
-    Err:      err,
-  }
+```zsh
+docker logs -f tele-bot
+docker stats tele-bot
 ```
 
 </details>

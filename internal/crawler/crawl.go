@@ -33,7 +33,7 @@ func Crawl(feed config.Resource, ch chan<- model.ListArticles) {
 
 	// api(json)
 	case "api":
-		listArticles, err := CrawlCTDAByAPI(feed.URL, feed.Category)
+		listArticles, err := CrawlAPIArticles(feed.URL, feed.Category)
 
 		ch <- model.ListArticles{
 			Articles: listArticles,
