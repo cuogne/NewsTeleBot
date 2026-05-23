@@ -20,8 +20,8 @@ var (
 )
 
 var geminiModels = []string{
+	"gemini-3.5-flash",
 	"gemini-2.5-flash",
-	"gemini-3-flash-preview",
 	"gemini-3.1-flash-lite",
 }
 
@@ -76,7 +76,7 @@ func SummarizeContentWithGemini(content string) (model.SummaryResult, error) {
 	}
 
 	configGemini := &genai.GenerateContentConfig{
-		Temperature: genai.Ptr[float32](0.7),
+		Temperature: genai.Ptr[float32](0.4),
 	}
 
 	prompt := fmt.Sprintf(`
