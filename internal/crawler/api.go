@@ -9,35 +9,41 @@ import (
 	"time"
 )
 
-type ctdaAPIResponse struct {
+type APIResponse struct {
 	Link  string `json:"link"`
 	Title struct {
 		Rendered string `json:"rendered"`
 	} `json:"title"`
 }
 
-func CrawlCTDAByAPI(link, category string) ([]model.Article, error) {
+func CrawlAPIArticles(link, category string) ([]model.Article, error) {
 	client := &http.Client{
 		Timeout: 10 * time.Second,
 	}
 
-	req, _ := http.NewRequest("GET", link, nil)
+	req, err := http.NewRequest("GET", link, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create API request: %w", err)
+	}
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("Error fetching CTDA articles: %v\n", err)
+		return nil, fmt.Errorf("Error fetching articles by api: %v\n", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		err = fmt.Errorf("failed to fetch CTDA articles: status %d", resp.StatusCode)
+		err = fmt.Errorf("failed to fetch articles: status %d", resp.StatusCode)
 		return nil, err
 	}
 
-	body, _ := io.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read API response body: %w", err)
+	}
 
-	var apiResp []ctdaAPIResponse
+	var apiResp []APIResponse
 	if err := json.Unmarshal(body, &apiResp); err != nil {
 		return nil, fmt.Errorf("Error parsing JSON: %v\n", err)
 	}
