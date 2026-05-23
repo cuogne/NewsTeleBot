@@ -61,3 +61,11 @@ create table ctda (
   prompt_token int,
   completion_token int
 );
+
+create table tintuchcmus (
+  url text primary key,
+  title text not null,
+  send_at timestamp,
+  prompt_token int,
+  completion_token int
+);
