@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"hcmus-news-tele-bot/config"
 	"hcmus-news-tele-bot/internal/model"
 	"log"
 	"os"
@@ -19,19 +20,14 @@ var (
 	initErr      error
 )
 
-var geminiModels = []string{
-	"gemini-3.5-flash",
-	"gemini-2.5-flash",
-	"gemini-3.1-flash-lite",
-}
-
 func isGeminiFallbackError(err error) bool {
 	var apiErr genai.APIError
 	if !errors.As(err, &apiErr) {
 		return false
 	}
 
-	return apiErr.Code == 429 || apiErr.Code == 503
+	// 429 (Too Many Requests), 503 (Service Unavailable), 500 (Internal Server Error)
+	return apiErr.Code == 429 || apiErr.Code == 503 || apiErr.Code == 500
 }
 
 func geminiErrorCode(err error) int {
@@ -69,6 +65,7 @@ func getGeminiClient(ctx context.Context) (*genai.Client, error) {
 
 func SummarizeContentWithGemini(content string) (model.SummaryResult, error) {
 	ctx := context.Background()
+	geminiModels := config.Models()
 
 	client, err := getGeminiClient(ctx)
 	if err != nil {
@@ -79,15 +76,7 @@ func SummarizeContentWithGemini(content string) (model.SummaryResult, error) {
 		Temperature: genai.Ptr[float32](0.4),
 	}
 
-	prompt := fmt.Sprintf(`
-		Bạn là một biên tập viên tóm tắt tin tức chuyên nghiệp. Nhiệm vụ của bạn là:
-		- Tóm tắt nội dung tin tức sau không vượt quá 3 dòng -> người dùng sẽ cảm thấy quá dài và không đọc (Bắt buộc - Key).
-		- Văn phong tóm tắt phải tự nhiên, không quá máy móc, bám sát nội dung bài viết.
-		- Phải đi qua đủ hết nội dung của trang web, tóm tắt lại đầy đủ -> người dùng chưa cần ấn vào link vẫn có thể nắm được sơ qua nội dung chính của bài viết.
-		- Chọn những dòng quan trọng/hấp dẫn để tóm tắt -> người dùng hứng thú -> vào link đọc tiếp.
-		- Không cần chào hỏi, vô thẳng nội dung chính, không cần nói thêm gì khác.
-		- Nếu tóm tắt xong, nội dung có câu: Trang web này sử dụng cookie, thì không ghi đoạn này, nếu không đủ nội dung thì để rỗng.
-		Nội dung bài viết như sau: %s`, content)
+	prompt := fmt.Sprintf(summarizePrompt, content)
 
 	var resp *genai.GenerateContentResponse
 
