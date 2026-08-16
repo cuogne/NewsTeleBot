@@ -94,8 +94,16 @@ func runCronCycle(b *tele.Bot, dbPool *pgxpool.Pool) {
 	close(jobs)
 
 	for range newArticles {
-		res := <-results                // receive summary from gemini
-		service.SendTele(b, users, res) // send for subscribed users
-		service.SaveToDB(dbPool, res)   // save to db
+		res := <-results // receive summary from gemini
+
+		// content fetch failed but will be retried next cycle,
+		// do not send or save so the article is not lost
+		if res.Retryable {
+			log.Printf("Fetch failed, will retry next cycle: %s", res.Article.URL)
+			continue
+		}
+
+		service.SendTele(b, dbPool, users, res) // send for subscribed users
+		service.SaveToDB(dbPool, res)           // save to db
 	}
 }

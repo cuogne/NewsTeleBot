@@ -12,5 +12,6 @@ type (
 		Summary         string
 		PromptToken     int
 		CompletionToken int
+		Retryable       bool // true when fetch failed and should be retried next cycle
 	}
 )
