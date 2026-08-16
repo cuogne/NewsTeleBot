@@ -181,6 +181,7 @@ B4. Sau khi chạy xong, bạn sẽ có file `.env` trong thư mục với các 
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token
 SUPABASE_URL=your_supabase_url
 GEMINI_API_KEY=your_gemini_api_key
+GEMINI_MODELS=add_your_gemini_models_here_separated_by_commas
 ```
 
 Thay các token trong file `.env` vừa được tạo bằng token của bạn, cách lấy như sau:
@@ -190,6 +191,10 @@ Thay các token trong file `.env` vừa được tạo bằng token của bạn,
 - **Supabase URL**: Login và tạo project trên [Supabase](https://supabase.com/), dán script tạo database trong [db/database.sql](db/database.sql) vào `SQL Editor` và run nó, sau đó chọn `Connect` và lấy URL trong `Session pooler`.
 
 - **Gemini API Key**: tạo tài khoản trên [Google AI Studio](https://aistudio.google.com/), chọn `Get API Key` và lấy key.
+
+- **Gemini Models** *(tùy chọn)*: list model Gemini dùng để tóm tắt, phân tách bằng dấu phẩy. Ví dụ: `gemini-3.5-flash-lite,gemini-3.7-flash,gemini-3.6-flash`.
+
+> Bạn có thể check các model Gemini có sẵn tại [https://ai.google.dev/gemini-api/docs/models](https://ai.google.dev/gemini-api/docs/models) và thêm vào các model tương thích với nhu cầu của bạn.
 
 B5. Run bot:
 
