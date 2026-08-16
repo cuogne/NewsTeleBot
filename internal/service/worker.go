@@ -29,10 +29,23 @@ func Worker(id int, jobs <-chan model.SummaryJob, results chan<- model.SummaryRe
 
 		content, err := GetContentFromURL(job.Article.URL)
 		if err != nil {
-			results <- emptyResult()
 			log.Printf("Error getting content while fetching URL %s: %v", job.Article.URL, err)
+
+			if shouldRetryFetch(job.Article.URL) {
+				results <- model.SummaryResult{
+					Article:   job.Article,
+					Category:  job.Category,
+					Retryable: true,
+				}
+				continue
+			}
+
+			clearFetchAttempt(job.Article.URL)
+			results <- emptyResult()
 			continue
 		}
+
+		clearFetchAttempt(job.Article.URL)
 
 		// content is empty -> no need to summarize, just return empty summary
 		// ("", err) or ("", nil)

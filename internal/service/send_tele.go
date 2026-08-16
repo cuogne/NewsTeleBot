@@ -3,17 +3,19 @@ package service
 import (
 	"fmt"
 	"hcmus-news-tele-bot/internal/model"
+	"html"
 	"log"
 	"strconv"
 	"strings"
 
+	"github.com/jackc/pgx/v5/pgxpool"
 	tele "gopkg.in/telebot.v4"
 )
 
-func SendTele(b *tele.Bot, users []string, res model.SummaryResult) {
-	title := strings.TrimSpace(res.Article.Title)
-	summary := strings.TrimSpace(res.Summary)
-	link := res.Article.URL
+func SendTele(b *tele.Bot, dbPool *pgxpool.Pool, users []string, res model.SummaryResult) {
+	title := html.EscapeString(strings.TrimSpace(res.Article.Title))
+	summary := html.EscapeString(strings.TrimSpace(res.Summary))
+	link := html.EscapeString(res.Article.URL)
 
 	msg := ""
 
@@ -33,6 +35,10 @@ func SendTele(b *tele.Bot, users []string, res model.SummaryResult) {
 		_, err = b.Send(recipient, msg, tele.ModeHTML)
 		if err != nil {
 			log.Printf("Error sending message to user %s: %v\n", uID, err)
+
+			if isUserUnreachable(err) {
+				autoUnsubscribe(dbPool, uID)
+			}
 		}
 	}
 }
